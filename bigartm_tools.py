@@ -14,6 +14,11 @@ def extract_unique_words(documents):
 
 
 def convert_to_batch(documents, index=0, size=1000, dictionary=None):
+    if type(documents) is not list:
+        documents = [documents]
+    if len(documents) > size:
+        chunks = [documents[x:x + size] for x in range(0, len(documents), size)]
+        return sum([convert_to_batch(x, i + index, dictionary=dictionary) for i, x in enumerate(chunks)], [])
     batch = artm.messages.Batch()
     batch.id = str(uuid.uuid4())
 
